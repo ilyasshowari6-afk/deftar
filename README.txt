@@ -48,3 +48,6 @@ V2 — inscription et récupération
 - Avant ouverture, tester le refus avant confirmation et l'envoi réel de
   confirmation et récupération, ainsi que le refus d'accès entre comptes.
   Activer l'inscription publique de production seulement après autorisation.
+
+La branche feature/public-registration utilise le projet indépendant
+ deftar-v2-preview. Les clés de test Turnstile sont réservées à Preview.
