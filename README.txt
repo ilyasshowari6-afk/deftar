@@ -25,3 +25,5 @@ Migration des anciennes données
   rapprochent les visites de la fiche existante. Les homonymes sans
   numéro restent distincts. Une fiche existante conserve ses champs.
 - L'import ne modifie pas et ne supprime pas la copie locale.
+
+La branche de travail utilise un déploiement Preview dédié sur Vercel.
