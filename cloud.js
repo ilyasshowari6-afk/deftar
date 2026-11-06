@@ -4,14 +4,20 @@ const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 let db;
 if (/^https:\/\/[a-z0-9]+\.supabase\.co\/?$/.test(url || '') && /^sb_publishable_[A-Za-z0-9_-]+$/.test(key || '')) {
-  db = createClient(url, key, { auth: { detectSessionInUrl: false } });
+  db = createClient(url, key, { auth: { detectSessionInUrl: false, flowType: 'pkce' } });
 }
 
 async function checked(request) {
   const { data, error } = await request;
   if (!error) return data;
   if (error.code === '23505') throw { error: 'duplicatePhone' };
-  if (error.code === 'invalid_credentials' || error.code === 'email_not_confirmed') throw { error: 'credentials' };
+  if (error.code === 'invalid_credentials') throw { error: 'credentials' };
+  if (error.code === 'email_not_confirmed') throw { error: 'confirmEmailFirst' };
+  if (error.code === 'captcha_failed') throw { error: 'captchaFailed' };
+  if (error.code === 'weak_password') throw { error: 'weakPassword' };
+  if (error.code === 'signup_disabled') throw { error: 'signupDisabled' };
+  if (error.code === 'same_password') throw { error: 'samePassword' };
+  if (error.code === 'email_address_not_authorized') throw { error: 'emailUnavailable' };
   if (error.status === 429) throw { error: 'rateLimit' };
   if (error.status === 401 || error.code === '42501') throw { error: 'signIn' };
   if (error.name === 'AuthRetryableFetchError' || error.message?.includes('Failed to fetch')) throw { error: 'network' };
@@ -48,8 +54,25 @@ export async function cloudApi(path, method = 'GET', data) {
     const { session } = await checked(db.auth.getSession());
     return { user: session?.user ?? null };
   }
-  if (path === 'auth') {
-    const result = await checked(db.auth.signInWithPassword({ email: data.email.trim(), password: data.password }));
+  if (path === 'auth/callback') {
+    return checked(db.auth.exchangeCodeForSession(data.code));
+  }
+  if (path === 'auth/update-password') {
+    await checked(db.auth.updateUser({ password: data.password }));
+    return checked(db.auth.signOut());
+  }
+  if (path === 'auth' || path === 'auth/signup' || path === 'auth/recover') {
+    const email = data.email.trim();
+    const redirect = new URL('/', window.location.origin).href;
+    const options = { captchaToken: data.captchaToken || undefined };
+    if (path === 'auth/recover') {
+      return checked(db.auth.resetPasswordForEmail(email, { ...options, redirectTo: redirect }));
+    }
+    const credentials = { email, password: data.password, options };
+    if (path === 'auth/signup') {
+      return checked(db.auth.signUp({ ...credentials, options: { ...options, emailRedirectTo: redirect } }));
+    }
+    const result = await checked(db.auth.signInWithPassword(credentials));
     return result.user;
   }
   if (path === 'logout') return checked(db.auth.signOut({ scope: 'local' }));

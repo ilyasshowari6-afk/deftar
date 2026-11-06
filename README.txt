@@ -27,3 +27,24 @@ Migration des anciennes données
 - L'import ne modifie pas et ne supprime pas la copie locale.
 
 La branche de travail utilise un déploiement Preview dédié sur Vercel.
+
+V2 — inscription et récupération
+- Vérifier en prévisualisation avec un projet Supabase séparé et des comptes
+  fictifs. Les deux variables VITE_SUPABASE_* doivent viser ce projet.
+- Ajouter l'URL exacte de prévisualisation dans Auth > URL Configuration.
+  Pour la mise en production, utiliser https://deftar-steel.vercel.app/
+  comme Site URL et autoriser exactement cette URL. Pas de wildcard.
+- Conserver la confirmation des e-mails, désactiver les connexions anonymes,
+  et configurer une longueur minimale de 12 caractères dans Supabase.
+- Configurer et tester un SMTP personnalisé avant d'ouvrir les inscriptions.
+  Le SMTP intégré est réservé aux adresses de l'équipe, avec 2 envois/h.
+- Configurer Cloudflare Turnstile dans Supabase Auth. Ajouter seulement la
+  clé publique VITE_TURNSTILE_SITE_KEY à Vercel pour l'environnement voulu.
+  Garder le secret du widget dans Supabase et les secrets SMTP côté serveur.
+  Vérifier le widget côté navigateur avant d'activer sa vérification côté
+  Supabase, qui s'applique aussi à la connexion et à la récupération.
+- Les liens de confirmation et de récupération utilisent PKCE et doivent
+  être ouverts dans le navigateur qui a demandé le lien.
+- Avant ouverture, tester le refus avant confirmation et l'envoi réel de
+  confirmation et récupération, ainsi que le refus d'accès entre comptes.
+  Activer l'inscription publique de production seulement après autorisation.

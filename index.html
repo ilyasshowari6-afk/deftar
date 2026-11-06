@@ -5,13 +5,46 @@
 
 .local-notice{font-size:11px;line-height:1.8;background:#fff5da;border:1px solid #e9dfbb;color:#79652e;padding:10px 14px;border-radius:8px;margin-bottom:25px}</style></head><body><div id="app"></div><script type="module">
 import {cloudApi,onSignOut} from "./cloud.js";
+import {captchaEnabled,captchaToken,mountCaptcha,resetCaptcha} from "./captcha.js";
 const T={ar:{storageError:'ما قدرناش نحفظو البيانات. راجع مساحة وصلاحيات المتصفح.',localNotice:'نسخة HTML محلية • البيانات غير فهاد المتصفح والجهاز، بلا تسجيل دخول أو مزامنة.',brand:'دفتر',tag:'زبناؤك، وكل تعامل فبلاصتو',home:'لوحة المتابعة',clients:'الزبناء',calendar:'التقويم',private:'البيانات محفوظة فهاد المتصفح',hello:'نهارك مبروك 👋',heading:'كل زبون عندو حكاية.',intro:'سجّل التعاملات، ورجع لأي تفصيل فاي وقت.',add:'زيد تسجيل',search:'قلّب بالاسم الشخصي، العائلي أو رقم الهاتف…',allClients:'الزبناء ديالك',total:'مجموع الزبناء',records:'التسجيلات',latest:'آخر تعامل',period:'تصفية حسب التاريخ',all:'كل التواريخ',day:'نهار',month:'شهر',year:'عام',range:'مدة',from:'من',to:'حتى',clear:'مسح التصفية',empty:'ما كاين حتى زبون هنا دابا',emptyHint:'زيد أول تسجيل، وخلي كلشي مجموع فبلاصة وحدة.',noResults:'ما لقيناش نتائج',noResultsHint:'جرّب اسم آخر أو بدّل تصفية التاريخ.',open:'حلّ البطاقة',entries:'تسجيلات',newClient:'زيد زبون جديد',existing:'زبون مسجّل',first:'الاسم الشخصي',last:'الاسم العائلي',phone:'رقم الهاتف',notes:'ملاحظات الزبون',optional:'اختياري',entryNotes:'ملاحظات هاد التعامل',date:'تاريخ التعامل',save:'حفظ التسجيل',saveClient:'حفظ البطاقة',cancel:'إلغاء',close:'سدّ',edit:'تعديل',editClient:'تعديل بطاقة الزبون',history:'تاريخ التعاملات',clientCard:'بطاقة الزبون',selectHint:'كتب جوج حروف باش تلقى زبون مسجّل',selected:'هاد التسجيل غادي يتزاد لبطاقة الزبون المختار.',newHint:'زبون جديد؟ اختار الزر باش تفتح بطاقة جديدة.',duplicatePhone:'نفس رقم الهاتف موجود فبطاقة أخرى.',viewExisting:'اختار البطاقة الموجودة',required:'دخل الاسم الشخصي والعائلي.',invalid:'راجع المعلومات اللي دخلتي.',dateInvalid:'اختار تاريخ صحيح بين 2026 و2031.',phoneInvalid:'دخل رقم هاتف صحيح.',serverError:'وقع مشكل فالحفظ. عاود جرّب.',network:'ما قدرناش نتاصلو بالخادم. تحقق من الاتصال وعاود جرّب.',signIn:'خاصك تدخل للحساب ديالك.',saved:'تحفظ التسجيل بنجاح',updated:'تحفظ التعديل',loading:'كنحمّلو البيانات…',signin:'دخول للحساب',register:'فتح حساب جديد',email:'البريد الإلكتروني',password:'كلمة السر',passwordHint:'10 حروف على الأقل',authTitle:'دفترك، ديما معاك.',authIntro:'دخل لحسابك باش تسجل الزبناء وتبقى متبع التعاملات ديالهم.',credentials:'راجع البريد وكلمة السر (10 حروف على الأقل).',accountExists:'هاد البريد عندو حساب. استعمل الدخول.',rateLimit:'محاولات كثيرة. تسنى 15 دقيقة وعاود جرّب.',logout:'الخروج',notFound:'هاد البطاقة ما بقاتش موجودة.',forbidden:'عاود حمّل الصفحة وجرب.',tooLarge:'الملاحظات طويلة بزاف.',noNotes:'ما كايناش ملاحظات',return:'رجوع للزبناء',countResult:'بطاقة',filterHint:'التصفية كتعرض الزبناء اللي عندهم تعامل فهاد المدة.',fullHistory:'التاريخ الكامل • من الأحدث للأقدم',editEntry:'تصحيح التسجيل',yearSpan:'يناير 2026 — دجنبر 2031',chooseDate:'اختار التاريخ',today:'اليوم',days:['إث','ثل','أر','خم','جم','سب','أح'],months:['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر']},fr:{storageError:'Stockage indisponible. Vérifiez l’espace et les autorisations du navigateur.',localNotice:'Version HTML locale • Données dans ce navigateur et cet appareil, sans connexion ni synchronisation.',brand:'Daftar',tag:'Vos clients, chaque échange à sa place',home:'Tableau de bord',clients:'Clients',calendar:'Calendrier',private:'Données dans ce navigateur',hello:'Bonjour 👋',heading:'Chaque client a son histoire.',intro:'Enregistrez vos échanges. Retrouvez chaque détail.',add:'Ajouter un suivi',search:'Prénom, nom ou numéro de téléphone…',allClients:'Vos clients',total:'Total des clients',records:'Enregistrements',latest:'Dernier échange',period:'Filtrer par date',all:'Toutes les dates',day:'Jour',month:'Mois',year:'Année',range:'Période',from:'Du',to:'Au',clear:'Effacer le filtre',empty:'Votre carnet commence ici',emptyHint:'Ajoutez votre premier suivi et retrouvez tout au même endroit.',noResults:'Aucun résultat',noResultsHint:'Essayez un autre nom ou modifiez les dates.',open:'Ouvrir la fiche',entries:'enregistrements',newClient:'Ajouter un nouveau client',existing:'Client existant',first:'Prénom',last:'Nom',phone:'Téléphone',notes:'Notes du client',optional:'facultatif',entryNotes:'Notes de cet échange',date:'Date de l’échange',save:'Enregistrer le suivi',saveClient:'Enregistrer la fiche',cancel:'Annuler',close:'Fermer',edit:'Modifier',editClient:'Modifier la fiche client',history:'Historique des échanges',clientCard:'Fiche client',selectHint:'Saisissez 2 lettres pour trouver un client existant',selected:'Ce suivi sera ajouté à la fiche du client sélectionné.',newHint:'Nouveau client ? Utilisez le bouton pour créer sa fiche.',duplicatePhone:'Ce numéro appartient déjà à une autre fiche.',viewExisting:'Sélectionner la fiche existante',required:'Renseignez le prénom et le nom.',invalid:'Vérifiez les informations saisies.',dateInvalid:'Choisissez une date valide entre 2026 et 2031.',phoneInvalid:'Saisissez un numéro de téléphone valide.',serverError:'Impossible d’enregistrer. Réessayez.',network:'Connexion au serveur impossible. Vérifiez votre connexion puis réessayez.',signIn:'Connectez-vous à votre compte.',saved:'Suivi enregistré',updated:'Modification enregistrée',loading:'Chargement…',signin:'Se connecter',register:'Créer un compte',email:'Adresse e-mail',password:'Mot de passe',passwordHint:'10 caractères minimum',authTitle:'Votre carnet, toujours avec vous.',authIntro:'Connectez-vous pour gérer vos clients et suivre tous vos échanges.',credentials:'Vérifiez l’e-mail et le mot de passe (10 caractères minimum).',accountExists:'Ce compte existe déjà. Connectez-vous.',rateLimit:'Trop de tentatives. Réessayez dans 15 minutes.',logout:'Se déconnecter',notFound:'Cette fiche est introuvable.',forbidden:'Actualisez la page et réessayez.',tooLarge:'Les notes sont trop longues.',noNotes:'Aucune note',return:'Retour aux clients',countResult:'fiches',filterHint:'Affiche les clients ayant un échange pendant cette période.',fullHistory:'Historique complet • du plus récent au plus ancien',editEntry:'Corriger le suivi',yearSpan:'Janvier 2026 — Décembre 2031',chooseDate:'Choisir la date',today:'Aujourd’hui',days:['Lu','Ma','Me','Je','Ve','Sa','Di'],months:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']}};
 Object.assign(T.fr,{private:'Données privées synchronisées',configuration:'La connexion à la base de données reste à configurer.',refresh:'Actualiser',deleteClient:'Supprimer la fiche',confirmDelete:'Supprimer cette fiche et toutes ses visites ?',deleted:'Fiche supprimée',migration:'Importer une sauvegarde',exportLocal:'Sauvegarder les données locales',importHere:'Importer les données de ce navigateur',importFile:'Importer un fichier JSON',imported:'Import terminé',invalidImport:'Sauvegarde DEFTAR invalide.',confirmImport:'Importer ces données dans le compte connecté ?',dateInvalid:'Choisissez une date valide à partir de 2026.',credentials:'Vérifiez votre adresse e-mail et votre mot de passe.'});
 Object.assign(T.ar,{private:'البيانات خاصة ومتزامنة',configuration:'خاص الاتصال بقاعدة البيانات يتضبط.',refresh:'حدّث',deleteClient:'حيد بطاقة الزبون',confirmDelete:'بغيتي تحيد هاد البطاقة وجميع التعاملات ديالها؟',deleted:'تحيدات البطاقة',migration:'استيراد نسخة احتياطية',exportLocal:'حمّل نسخة من البيانات المحلية',importHere:'استورد بيانات هاد المتصفح',importFile:'استورد ملف JSON',imported:'الاستيراد سالا',invalidImport:'هاد النسخة ديال دفتر ما صالحةش.',confirmImport:'بغيتي تستورد هاد البيانات فالحساب اللي داخل بيه؟',dateInvalid:'اختار تاريخ صحيح من 2026 وطالع.',credentials:'راجع البريد الإلكتروني وكلمة السر.'});
+Object.assign(T.fr,{
+  signup:'Créer un compte',recover:'Mot de passe oublié ?',updatePassword:'Définir un nouveau mot de passe',
+  emailSent:'Si l’adresse peut recevoir ce message, consultez votre boîte e-mail et les indésirables. Ouvrez le lien dans le même navigateur.',
+  signupSent:'Consultez votre boîte e-mail et les indésirables pour confirmer votre adresse. Ouvrez le lien dans le même navigateur.',
+  passwordUpdated:'Mot de passe modifié. Connectez-vous avec votre nouveau mot de passe.',
+  confirmEmailFirst:'Confirmez votre adresse e-mail avant de vous connecter.',
+  invalidLink:'Le lien a expiré ou a été ouvert dans un autre navigateur. Demandez un nouveau lien.',
+  captchaFailed:'Terminez la vérification anti-robot puis réessayez.',
+  weakPassword:'Choisissez un mot de passe d’au moins 12 caractères.',
+  samePassword:'Choisissez un mot de passe différent.',
+  signupDisabled:'Les inscriptions sont actuellement fermées.',
+  emailUnavailable:'L’envoi d’e-mails est indisponible pour cette adresse dans cet environnement.'
+});
+Object.assign(T.ar,{
+  signup:'فتح حساب',recover:'نسيتي كلمة السر؟',updatePassword:'عيّن كلمة سر جديدة',
+  emailSent:'إلا كان ممكن يتصيفط ليك المساج، قلّب فالإيميل وحتى فالرسائل غير المرغوب فيها. حلّ الرابط فنفس المتصفح.',
+  signupSent:'قلّب فالإيميل وحتى فالرسائل غير المرغوب فيها باش تأكد العنوان ديالك. حلّ الرابط فنفس المتصفح.',
+  passwordUpdated:'تبدلات كلمة السر. دخل بكلمة السر الجديدة.',
+  confirmEmailFirst:'أكّد الإيميل ديالك قبل ما تدخل.',
+  invalidLink:'الرابط سالات الصلاحية ديالو ولا تحل فمتصفح آخر. طلب رابط جديد.',
+  captchaFailed:'كمّل التحقق ديال الحماية وعاود جرّب.',
+  weakPassword:'اختار كلمة سر فيها على الأقل 12 حرف.',
+  samePassword:'اختار كلمة سر مختلفة.',
+  signupDisabled:'التسجيل مسدود دابا.',
+  emailUnavailable:'ما يمكنش يتصيفط الإيميل لهاد العنوان فهاد النسخة.'
+});
+let authMode='login',authNotice='';
+const recoveryKey='deftar-password-recovery';
+function rememberRecovery(value){
+  try{if(value)sessionStorage.setItem(recoveryKey,'1');else sessionStorage.removeItem(recoveryKey)}catch{}
+}
+function recoveryPending(){try{return sessionStorage.getItem(recoveryKey)==='1'}catch{return false}}
 let lang='ar';try{lang=localStorage.getItem('daftar-lang')||'ar'}catch{};if(!T[lang])lang='ar';const t=k=>T[lang][k]||k;
 const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const now=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Casablanca',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());const today=/^\d{4}-/.test(now)?now:new Date().toISOString().slice(0,10);
-let user=null,clients=[],busy=false,auth={email:'',password:''},error='',query='',filter='all',filterDate=today,filterEnd=today,active=null,modal=null,draft={},suggest=true,duplicate=null,toast='',calendarDate=today;
+let user=null,clients=[],busy=false,auth={email:''},error='',query='',filter='all',filterDate=today,filterEnd=today,active=null,modal=null,draft={},suggest=true,duplicate=null,toast='',calendarDate=today;
 let syncError='',reading=0,importResult='',toastTimer;
 const firstYear=2026,lastYear=Math.max(2031,Number(today.slice(0,4))+1);
 const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').trim();
@@ -41,7 +74,7 @@ async function load(){
 }
 function resetAccount(){
   user=null;clients=[];active=null;modal=null;draft={};duplicate=null;query='';filter='all';
-  auth.password='';error='';syncError='';importResult='';toast='';render();
+  authMode='login';rememberRecovery(false);error='';syncError='';importResult='';toast='';render();
 }
 function notify(k){toast=k;clearTimeout(toastTimer);render();toastTimer=setTimeout(()=>{toast='';render()},3000);}
 function legacyPayload(records){
@@ -91,9 +124,80 @@ function input(k,value='',opts=''){return `<label>${esc(t(k))}${['phone','notes'
 function textarea(k,value=''){return `<label>${t(k)} <small>(${t('optional')})</small><textarea id="${k}" name="${k}" maxlength="5000" rows="3">${esc(value)}</textarea></label>`;}
 function setLanguage(){lang=lang==='ar'?'fr':'ar';try{localStorage.setItem('daftar-lang',lang)}catch{}render();}
 function render(){const focused=document.activeElement?.id;const sel=document.activeElement?.selectionStart;document.documentElement.lang=lang==='ar'?'ar-MA':'fr';document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=t('brand')+' · '+t('clients');
+resetCaptcha();
 $('#app').innerHTML=`${user?`<aside><a class="brand" href="/">${icon('home')} <b>${t('brand')}</b><span>CLIENT JOURNAL</span></a><div class="side-caption">${t('private')}</div><button class="nav current" data-action="home">${icon('home')} ${t('home')}</button><button class="nav" data-action="home">${icon('clients')} ${t('clients')} <em>${clients.length}</em></button><button class="nav" data-action="calendar">${icon('calendar')} ${t('calendar')}</button><div class="side-bottom"><span class="security">${icon('lock')} ${t('private')}</span><p>${esc(user.email)}</p>${button('logout','text-button','data-action="logout"')}</div></aside>`:''}<div class="workspace ${!user?'auth-workspace':''}"><header><span class="breadcrumb">${user?t(active?'clientCard':'home'):t('brand')}</span><div class="header-tools"><button class="lang" data-action="language"><span ${lang==='ar'?'class="selected"':''}>الدارجة</span><i>|</i><span ${lang==='fr'?'class="selected"':''}>Français</span></button>${user?`<span class="avatar">${esc(user.email?.[0]?.toUpperCase()||'D')}</span>`:''}</div></header><main>${user?`<div class="header-tools" style="margin-bottom:18px">${button('refresh','text-button','data-action="refresh"')} ${button('migration','text-button','data-action="migration"')} ${button('logout','text-button','data-action="logout"')}</div>`:''}${syncError?`<p class="local-notice" role="alert">${t(syncError)}</p>`:''}${user?(active?detail():dashboard()):authPage()}</main><footer>دفتر <span>·</span> ${t('tag')}</footer></div>${modal?modalPage():''}${toast?`<div class="toast" role="status">✓ ${t(toast)}</div>`:''}`;
-bind();if(focused){const el=document.getElementById(focused);if(el){el.focus();if(typeof sel==='number'&&['text','tel','search','email','password'].includes(el.type))try{el.setSelectionRange(sel,sel)}catch{}}}}
-function authPage(){return `<section class="auth-layout"><div class="auth-story"><div class="eyebrow">DAFTAR / دفتر</div><h1>${t('authTitle')}</h1><p>${t('authIntro')}</p><div class="journal-art"><div class="art-lines"></div><span>د</span></div><span class="security">◈ ${t('private')}</span></div><form id="auth-form" class="auth-form"><div class="eyebrow">${t('brand')}</div><h2>${t('signin')}</h2>${input('email',auth.email,'type="email" required autocomplete="email" maxlength="254"')}${input('password','','type="password" required autocomplete="current-password"')}${error?`<p role="alert" class="error">${t(error)}</p>`:''}<button class="primary full" ${busy?'disabled':''}>${t(busy?'loading':'signin')}</button></form></section>`;}
+bind();
+mountCaptcha($('#auth-captcha'),()=>{const note=$('#captcha-note');if(note)note.textContent=t('captchaFailed')});
+if(focused){const el=document.getElementById(focused);if(el){el.focus();if(typeof sel==='number'&&['text','tel','search','email','password'].includes(el.type))try{el.setSelectionRange(sel,sel)}catch{}}}}
+function authPage(){
+  const mode=authMode;
+  const label={login:'signin',signup:'signup',recover:'recover',update:'updatePassword'}[mode];
+  const isNewPassword=mode==='signup'||mode==='update';
+  const passwordOptions=isNewPassword?'minlength="12" autocomplete="new-password"':'autocomplete="current-password"';
+  return `<section class="auth-layout"><div class="auth-story"><div class="eyebrow">DAFTAR / دفتر</div><h1>${t('authTitle')}</h1><p>${t('authIntro')}</p><div class="journal-art"><div class="art-lines"></div><span>د</span></div><span class="security">◈ ${t('private')}</span></div><form id="auth-form" class="auth-form"><div class="eyebrow">${t('brand')}</div><h2>${t(label)}</h2>
+    ${mode==='update'?'':input('email',auth.email,'type="email" required autocomplete="email" maxlength="254"')}
+    ${mode==='recover'?'':input('password','',`type="password" required ${passwordOptions}`)}
+    ${isNewPassword?`<small>${t('weakPassword')}</small>`:''}
+    ${captchaEnabled&&mode!=='update'&&!busy?'<div id="auth-captcha"></div><small id="captcha-note" aria-live="polite"></small>':''}
+    ${authNotice?`<p role="status">${t(authNotice)}</p>`:''}
+    ${error?`<p role="alert" class="error">${t(error)}</p>`:''}
+    <button class="primary full" ${busy?'disabled':''}>${t(busy?'loading':label)}</button>
+    ${mode==='login'?button('signup','text-button','type="button" data-action="auth-signup"')+button('recover','text-button','type="button" data-action="auth-recover"'):button(mode==='update'?'logout':'signin','text-button',`type="button" data-action="${mode==='update'?'logout':'auth-login'}"`)}
+  </form></section>`;
+}
+async function submitAuth(event){
+  event.preventDefault();
+  if(busy)return;
+  const mode=authMode;
+  const fields=new FormData(event.currentTarget);
+  const data={email:String(fields.get('email')||'').trim(),password:String(fields.get('password')||''),captchaToken:captchaToken()};
+  if(mode!=='update')auth.email=data.email;
+  authNotice='';error='';
+  if(captchaEnabled&&mode!=='update'&&!data.captchaToken){
+    $('#captcha-note').textContent=t('captchaFailed');
+    return;
+  }
+  busy=true;render();
+  try{
+    if(mode==='login'){user=await api('auth','POST',data);await load();}
+    if(mode==='signup'){
+      const result=await api('auth/signup','POST',data);
+      if(result.session){await api('logout','POST');throw {error:'configuration'};}
+      authNotice='signupSent';
+    }
+    if(mode==='recover'){await api('auth/recover','POST',data);authNotice='emailSent';}
+    if(mode==='update'){
+      await api('auth/update-password','POST',data);
+      rememberRecovery(false);authMode='login';authNotice='passwordUpdated';
+    }
+  }catch(e){error=e.error||'serverError'}
+  finally{busy=false;render()}
+}
+async function initializeAuth(){
+  const url=new URL(location.href);
+  const code=url.searchParams.get('code');
+  const failed=url.searchParams.has('error')||url.searchParams.has('error_code')||url.hash.includes('error=');
+  if(code||failed){
+    for(const key of ['code','error','error_code','error_description'])url.searchParams.delete(key);
+    url.hash='';
+    history.replaceState(null,'',url);
+  }
+  if(failed){error='invalidLink';return;}
+  if(code){
+    let result;
+    try{result=await api('auth/callback','POST',{code});}
+    catch{error='invalidLink';return;}
+    if(result.redirectType==='recovery'){
+      rememberRecovery(true);authMode='update';return;
+    }
+    rememberRecovery(false);
+  }
+  const state=await api('me');
+  if(state.user&&recoveryPending()){authMode='update';return;}
+  if(!state.user)rememberRecovery(false);
+  user=state.user;
+  if(user)await load();
+}
 function inPeriod(d){if(filter==='all')return true;if(filter==='range')return d>=filterDate&&d<=filterEnd;return d.slice(0,filter==='year'?4:filter==='month'?7:10)===filterDate.slice(0,filter==='year'?4:filter==='month'?7:10);}
 function dashboard(){const list=clients.filter(c=>(!query||matches(c,query))&&(filter==='all'||c.entries.some(e=>inPeriod(e.date))));const entries=clients.flatMap(c=>c.entries);return `<section class="intro"><div><div class="eyebrow">${t('hello')}</div><h1>${t('heading')}</h1><p>${t('intro')}</p></div><button class="primary add-main" data-action="add">＋ ${t('add')}</button></section><section class="stats"><div><span>${t('total')}</span><strong>${clients.length}<i>♙</i></strong></div><div><span>${t('records')}</span><strong>${entries.length}<i>▤</i></strong></div><div><span>${t('latest')}</span><strong class="date-stat">${dateText(entries.map(e=>e.date).sort().at(-1))}<i>▦</i></strong></div></section><section class="toolbar"><div class="search-box"><span>⌕</span><input type="search" id="search" placeholder="${t('search')}" aria-label="${t('search')}" value="${esc(query)}">${query?`<button data-action="clear-search" aria-label="${t('clear')}">×</button>`:''}</div><div class="filter-row"><label class="filter-label">▦ ${t('period')}<select id="filter">${['all','day','month','year','range'].map(k=>`<option value="${k}" ${filter===k?'selected':''}>${t(k)}</option>`).join('')}</select></label>${filter!=='all'?`${filter==='range'?`<span>${t('from')}</span>`:''}${dateSelect(filterDate,'filter',filter==='month'?'month':filter==='year'?'year':'day')}${filter==='range'?`<span>${t('to')}</span>${dateSelect(filterEnd,'filterEnd')}`:''}<button class="text-button" data-action="clear-filter">${t('clear')}</button>`:''}</div>${filter!=='all'?`<p class="filter-help">${t('filterHint')}</p>`:''}${filter==='range'&&filterDate>filterEnd?`<p class="error" role="alert">${t('dateInvalid')}</p>`:''}</section><div class="list-heading"><h2>${t('allClients')} <span>${list.length}</span></h2><span>${yearSpan()}</span></div>${list.length?`<section class="cards">${list.map(c=>`<button class="client-card" data-client="${c.id}"><div class="card-top"><span class="client-avatar">${esc(c.first[0]+c.last[0])}</span><span class="card-arrow">${icon('arrow')}</span></div><h3>${esc(c.first+' '+c.last)}</h3><p class="phone" dir="ltr">${esc(c.phone||'—')}</p><div class="card-meta"><span>${t('latest')}<b>${dateText(c.entries[0]?.date)}</b></span><span class="badge">${c.entries.length} ${t('entries')}</span></div></button>`).join('')}</section>`:`<section class="empty"><div>▤</div><h2>${t(query||filter!=='all'?'noResults':'empty')}</h2><p>${t(query||filter!=='all'?'noResultsHint':'emptyHint')}</p>${!query&&filter==='all'?`<button class="primary" data-action="add">＋ ${t('add')}</button>`:''}</section>`}`;}
 function detail(){const c=clients.find(x=>x.id===active);if(!c){active=null;return dashboard();}return `<button class="text-button back" data-action="home">${lang==='ar'?'→':'←'} ${t('return')}</button><section class="profile-header"><span class="client-avatar large">${esc(c.first[0]+c.last[0])}</span><div><div class="eyebrow">${t('clientCard')}</div><h1>${esc(c.first+' '+c.last)}</h1><p dir="ltr" class="profile-phone">${esc(c.phone||'—')}</p></div><button class="secondary" data-action="edit-client">✎ ${t('editClient')}</button></section><section class="profile-grid"><div><div class="notes-panel"><span class="eyebrow">${t('notes')}</span><p>${esc(c.notes||t('noNotes'))}</p></div><div class="history-heading"><div><h2>${t('history')}</h2><small>${t('fullHistory')}</small></div><button class="primary" data-action="add-existing">＋ ${t('add')}</button></div><div class="timeline">${c.entries.map(e=>`<article class="entry"><div class="entry-dot"></div><div><strong>${dateText(e.date)}</strong><p>${esc(e.notes||t('noNotes'))}</p></div><button class="text-button" data-entry="${e.id}">✎ ${t('edit')}</button></article>`).join('')}</div></div><div class="profile-summary"><span>${t('records')}</span><strong>${c.entries.length}</strong><hr><span>${t('latest')}</span><h3>${dateText(c.entries[0]?.date)}</h3><div class="secure-note">◈ ${t('private')}</div>${button('deleteClient','text-button','data-action="delete-client"')}</div></section>`;}
@@ -107,16 +211,19 @@ return `<div class="overlay"><section class="modal" role="dialog" aria-modal="tr
 function bind(){document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));document.querySelectorAll('[data-client]').forEach(b=>b.onclick=()=>{active=b.dataset.client;render();window.scrollTo(0,0)});document.querySelectorAll('[data-select]').forEach(b=>b.onclick=()=>{const c=clients.find(x=>x.id===b.dataset.select)||duplicate;if(!c)return;if(modal==='client'){active=c.id;modal=null;duplicate=null;render();return;}modal='add';draft={...draft,clientId:c.id,first:c.first,last:c.last,phone:c.phone,notes:c.notes,newClient:false};error='';duplicate=null;suggest=false;render()});
 $('#search')?.addEventListener('input',e=>{query=e.target.value;render()});$('#filter')?.addEventListener('change',e=>{filter=e.target.value;render()});
 for(const k of ['first','last','phone','notes','entryNotes'])$('#'+k)?.addEventListener('input',e=>{draft[k]=e.target.value;error='';duplicate=null;if(['first','last'].includes(k)&&!draft.newClient){suggest=true;render();}else if(k==='phone'){const found=draft.phone&&clients.find(c=>c.id!==draft.clientId&&phoneNorm(c.phone)===phoneNorm(draft.phone));if(found)duplicate=found;render()}});
-for(const k of ['email','password'])$('#'+k)?.addEventListener('input',e=>{auth[k]=e.target.value});
+$('#email')?.addEventListener('input',e=>{auth.email=e.target.value});
 document.querySelectorAll('[data-date] select').forEach(select=>select.onchange=()=>{const wrap=select.closest('[data-date]');let y=Number(wrap.querySelector('[data-part=y]').value),m=Number(wrap.querySelector('[data-part=m]')?.value||1),d=Number(wrap.querySelector('[data-part=d]')?.value||1);d=Math.min(d,new Date(Date.UTC(y,m,0)).getUTCDate());const v=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;if(wrap.dataset.date==='draft')draft.date=v;else if(wrap.dataset.date==='filter')filterDate=v;else if(wrap.dataset.date==='filterEnd')filterEnd=v;else calendarDate=v;render()});
 document.querySelectorAll('[data-cal-day]').forEach(b=>b.onclick=()=>{calendarDate=b.dataset.calDay;render()});document.querySelectorAll('[data-entry]').forEach(b=>b.onclick=()=>{const c=clients.find(c=>c.id===active),e=c.entries.find(e=>e.id===b.dataset.entry);modal='entry';draft={...e,entryNotes:e.notes};error='';render()});
-$('#auth-form')?.addEventListener('submit',async e=>{e.preventDefault();if(busy)return;busy=true;error='';render();try{user=await api('auth','POST',auth);auth.password='';await load();}catch(e){error=e.error||'serverError'}finally{auth.password='';busy=false;render()}});
+$('#auth-form')?.addEventListener('submit',submitAuth);
 $('#entry-form')?.addEventListener('submit',submitEntry);
 $('#legacy-file')?.addEventListener('change',e=>{const file=e.target.files[0];if(file)importLegacy(async()=>JSON.parse(await file.text()));});
 }
 async function submitEntry(e){e.preventDefault();if(busy)return;busy=true;error='';render();try{if(modal==='client')await api('clients/'+draft.clientId,'PATCH',draft);else if(modal==='entry')await api('entries/'+draft.id,'PATCH',{date:draft.date,notes:draft.entryNotes});else if(draft.clientId)await api('clients/'+draft.clientId+'/entries','POST',{date:draft.date,notes:draft.entryNotes});else{if(!draft.newClient)throw{error:'required'};const b=await api('clients','POST',{...draft,entry:{date:draft.date,notes:draft.entryNotes}});active=b.id;}const changed=modal!=='add';modal=null;await load();notify(changed?'updated':'saved');}catch(e){error=e.error||'serverError';if(e.client)duplicate=e.client;}finally{busy=false;render();}}
 async function action(a){
 if(busy&&a!=='language')return;
+if(['auth-login','auth-signup','auth-recover'].includes(a)){
+  authMode=a.slice(5);authNotice='';error='';render();return;
+}
 if(a==='refresh'){await load();render();return;}
 if(a==='migration'){if(!user||busy)return;modal='migration';error='';importResult='';render();return;}
 if(a==='export-local'){exportLegacy();return;}
@@ -141,7 +248,7 @@ window.addEventListener('focus',refreshIfIdle);
 document.addEventListener('visibilitychange',refreshIfIdle);
 setInterval(refreshIfIdle,15000);
 busy=true;render();
-try{const b=await api('me');user=b.user;if(user)await load();}
+try{await initializeAuth();}
 catch(e){error=e.error||'network'}
 finally{busy=false;render()}
 
