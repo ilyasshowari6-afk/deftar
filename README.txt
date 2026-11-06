@@ -1,31 +1,29 @@
-DAFTAR LOCAL — دفتر الزبناء
+DEFTAR — دفتر الزبناء
 
-موقع محلي كامل داخل index.html: HTML + CSS + JavaScript.
+Cette branche utilise Supabase Auth et PostgreSQL. L'interface reste en
+darija et en français, avec les mêmes fiches, visites et filtres.
 
-التشغيل فـ VS Code:
-1. فك الضغط على daftar-local.zip.
-2. فـ VS Code اختار File > Open Folder وحلّ dossier daftar-local.
-3. ثبّت الإضافة Live Server (Ritwick Dey).
-4. كليكي باليمين على index.html ثم Open with Live Server.
-5. حلّ http://127.0.0.1:5500 بنفس المتصفح كل مرة.
+Développement et prévisualisation
+- npm ci, puis npm run dev ou npm run build.
+- VITE_SUPABASE_URL et VITE_SUPABASE_PUBLISHABLE_KEY sont les deux
+  variables publiques attendues au moment de la compilation.
+- Appliquer le fichier de supabase/migrations sur le projet désigné.
+- Créer les comptes autorisés dans Supabase Auth et désactiver
+  l'inscription publique. L'application affiche uniquement la connexion.
+- Sur Vercel, configurer d'abord les variables pour la branche Preview.
+  N'activer le déploiement Production qu'après validation.
 
-ما محتاج لا npm لا حساب لا قاعدة بيانات خارجية.
-البيانات محفوظة محلياً فالمتصفح ديالك (localStorage).
-ما تمسحش بيانات الموقع، ما تستعملش navigation privée، وحافظ على نفس العنوان والبورت.
-ما كاين لا تسجيل دخول لا مزامنة مع أجهزة أخرى.
+Migration des anciennes données
+- Utiliser « Importer une sauvegarde » depuis le compte destinataire.
+- Les données de l'ancienne version restent dans le stockage du
+  navigateur sur leur adresse d'origine. La version cloud ouverte sur
+  cette même adresse peut télécharger une copie JSON et l'importer.
+- Le formulaire accepte aussi un fichier JSON déjà sauvegardé. Ne pas
+  transmettre de vraies données au déploiement Preview.
+- Vérifier les compteurs et l'historique après import. Les identifiants
+  sources empêchent de répéter le même import et les numéros identiques
+  rapprochent les visites de la fiche existante. Les homonymes sans
+  numéro restent distincts. Une fiche existante conserve ses champs.
+- L'import ne modifie pas et ne supprime pas la copie locale.
 
-الوظائف:
-- إضافة وتعديل بطاقات الزبناء.
-- تسجيلات متعددة بتاريخ وملاحظات، من الأحدث للأقدم.
-- اقتراح الزبون ابتداءً من جوج حروف، مع الهاتف.
-- تنبيه رقم الهاتف المكرر.
-- بحث مباشر بالاسم والعائلة والهاتف.
-- تقويم 2026 إلى 2031، ومنه 29 فبراير 2028.
-- تصفية حسب نهار، شهر، عام أو مدة.
-- الدارجة RTL والفرنسية LTR بلا ضياع الصفحة والمعلومات المدخلة.
-
-Le projet est autonome et fonctionne localement : ouvrez le dossier dans VS Code,
-installez Live Server, puis clic droit sur index.html > Open with Live Server.
-Gardez la même adresse http://127.0.0.1:5500 et le même navigateur.
-Aucune commande npm. Les données restent dans le navigateur uniquement.
-Ne supprimez pas les données du site. Pas de compte ni de synchronisation distante.
+La branche de travail utilise un déploiement Preview dédié sur Vercel.

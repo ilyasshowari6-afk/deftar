@@ -1,0 +1,8 @@
+{
+  "name": "deftar",
+  "private": true,
+  "type": "module",
+  "scripts": {"dev": "vite", "build": "vite build"},
+  "dependencies": {"@supabase/supabase-js": "2.119.0"},
+  "devDependencies": {"vite": "^7.0.0"}
+}
